@@ -1,4 +1,4 @@
-//10.94 ES6 spread operators in reducers
+//10.96 Filtering Redux Data
 
 import { createStore, combineReducers } from 'redux'
 import uuid from 'uuid'
@@ -73,7 +73,6 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
     case 'EDIT_EXPENSE':
       return state.map(expense => {
         if (expense.id === action.id) {
-          console.log(expense.id, action.id)
           return {
             ...expense,
             ...action.updates
@@ -128,6 +127,36 @@ const filterReducer = (state = filterReducerDefaultState, action) => {
   }
 }
 
+// Timestamps
+// counting in milliseconds + = forward from now // - = back from now
+// Now = 0 >> January 1st 1970 (unix epoch)
+//(valid e.g. 33400, 10, -203)
+
+// Get visible expenses
+const getVisibleExpenses = (expenses, { text, sortBy, startDate, endDate }) => {
+  return expenses.filter(expense => {
+    const startDateMatch =
+      typeof startDate !== 'number' || expense.createdAt >= startDate
+    const endDateMatch =
+      typeof endDate !== 'number' || expense.createdAt <= endDate
+    //str.toLowerCase()
+    //str.includes(searchString[, position])
+    //'Blue Whale'.includes('blue'); // gibt false wieder
+    const textMatch =
+      //text.length === 0 ||
+      expense.description.toLowerCase().includes(text.toLowerCase())
+    console.log(
+      'TEXT: ',
+      textMatch,
+      expense.description.toLowerCase(),
+      ' includes ',
+      text.toLowerCase()
+    )
+
+    return startDateMatch && endDateMatch && textMatch
+  })
+}
+
 // Store creation
 
 const store = createStore(
@@ -140,30 +169,42 @@ const store = createStore(
 
 // Subscribe to state updates
 store.subscribe(() => {
-  console.log(store.getState())
+  const state = store.getState()
+  const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
+  console.log('FILTERS: ', state.filters)
+  console.log('VISIBLEEXPENSES', visibleExpenses)
 })
 
-const exp1 = store.dispatch(addExpense({ description: 'Rent', amount: 500 }))
-const exp2 = store.dispatch(addExpense({ description: 'Coffee', amount: 300 }))
-const exp3 = store.dispatch(addExpense({ description: 'Tea', amount: 150 }))
+const exp1 = store.dispatch(
+  addExpense({ description: 'Rent', amount: 500, createdAt: 1000 })
+)
+const exp2 = store.dispatch(
+  addExpense({ description: 'Coffee', amount: 300, createdAt: -1000 })
+)
+// const exp3 = store.dispatch(
+//   addExpense({ description: 'Tea', amount: 150, createdAt: 2000 })
+// )
 
 // Remove expense
-store.dispatch(removeExpense({ id: exp3.expense.id }))
+//store.dispatch(removeExpense({ id: exp3.expense.id }))
 
 // Edit expense
-store.dispatch(
-  editExpense(exp1.expense.id, { amount: 800, note: 'here is my note' })
-)
+// store.dispatch(
+//   editExpense(exp1.expense.id, { amount: 800, note: 'here is my note' })
+// )
 
 // Set Filters
-store.dispatch(setTextFilter('rent'))
-store.dispatch(setTextFilter())
-store.dispatch(sortByAmount())
-store.dispatch(sortByDate())
+store.dispatch(setTextFilter('re'))
+//store.dispatch(setTextFilter())
+
+//store.dispatch(sortByAmount())
+//store.dispatch(sortByDate())
+
 store.dispatch(setStartDate(125))
-store.dispatch(setStartDate())
+//store.dispatch(setStartDate())
 store.dispatch(setEndDate(1250))
 
+/*
 // Demo State
 const demoState = {
   expenses: [
@@ -182,3 +223,5 @@ const demoState = {
     endDate: undefined
   }
 }
+console.log(demoState)
+*/
