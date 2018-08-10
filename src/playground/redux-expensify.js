@@ -127,11 +127,6 @@ const filterReducer = (state = filterReducerDefaultState, action) => {
   }
 }
 
-// Timestamps
-// counting in milliseconds + = forward from now // - = back from now
-// Now = 0 >> January 1st 1970 (unix epoch)
-//(valid e.g. 33400, 10, -203)
-
 // Get visible expenses
 const getVisibleExpenses = (expenses, { text, sortBy, startDate, endDate }) => {
   return expenses.filter(expense => {
@@ -139,20 +134,9 @@ const getVisibleExpenses = (expenses, { text, sortBy, startDate, endDate }) => {
       typeof startDate !== 'number' || expense.createdAt >= startDate
     const endDateMatch =
       typeof endDate !== 'number' || expense.createdAt <= endDate
-    //str.toLowerCase()
-    //str.includes(searchString[, position])
-    //'Blue Whale'.includes('blue'); // gibt false wieder
     const textMatch =
-      //text.length === 0 ||
+      text.length === 0 ||
       expense.description.toLowerCase().includes(text.toLowerCase())
-    console.log(
-      'TEXT: ',
-      textMatch,
-      expense.description.toLowerCase(),
-      ' includes ',
-      text.toLowerCase()
-    )
-
     return startDateMatch && endDateMatch && textMatch
   })
 }
