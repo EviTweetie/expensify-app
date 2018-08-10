@@ -129,16 +129,26 @@ const filterReducer = (state = filterReducerDefaultState, action) => {
 
 // Get visible expenses
 const getVisibleExpenses = (expenses, { text, sortBy, startDate, endDate }) => {
-  return expenses.filter(expense => {
-    const startDateMatch =
-      typeof startDate !== 'number' || expense.createdAt >= startDate
-    const endDateMatch =
-      typeof endDate !== 'number' || expense.createdAt <= endDate
-    const textMatch = expense.description
-      .toLowerCase()
-      .includes(text.toLowerCase())
-    return startDateMatch && endDateMatch && textMatch
-  })
+  return expenses
+    .filter(expense => {
+      const startDateMatch =
+        typeof startDate !== 'number' || expense.createdAt >= startDate
+      const endDateMatch =
+        typeof endDate !== 'number' || expense.createdAt <= endDate
+      const textMatch = expense.description
+        .toLowerCase()
+        .includes(text.toLowerCase())
+      return startDateMatch && endDateMatch && textMatch
+    })
+    .sort((a, b) => {
+      if (sortBy === 'date') {
+        return a.createdAt < b.createdAt ? 1 : -1
+      } else if (sortBy === 'amount') {
+        return a.amount < b.amount ? 1 : -1
+      } else {
+        console.log('no sort by defined')
+      }
+    })
 }
 
 // Store creation
@@ -155,19 +165,19 @@ const store = createStore(
 store.subscribe(() => {
   const state = store.getState()
   const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
-  console.log('FILTERS: ', state.filters)
+  console.log('STATE: ', state)
   console.log('VISIBLEEXPENSES', visibleExpenses)
 })
 
 const exp1 = store.dispatch(
-  addExpense({ description: 'Rent', amount: 500, createdAt: 1000 })
+  addExpense({ description: 'Rent', amount: 500, createdAt: 200 })
 )
 const exp2 = store.dispatch(
-  addExpense({ description: 'Coffee', amount: 300, createdAt: -1000 })
+  addExpense({ description: 'Coffee', amount: 300, createdAt: 300 })
 )
-// const exp3 = store.dispatch(
-//   addExpense({ description: 'Tea', amount: 150, createdAt: 2000 })
-// )
+const exp3 = store.dispatch(
+  addExpense({ description: 'Tea', amount: 1000, createdAt: 150 })
+)
 
 // Remove expense
 //store.dispatch(removeExpense({ id: exp3.expense.id }))
@@ -178,15 +188,15 @@ const exp2 = store.dispatch(
 // )
 
 // Set Filters
-store.dispatch(setTextFilter('re'))
+// store.dispatch(setTextFilter('re'))
 //store.dispatch(setTextFilter())
-
-//store.dispatch(sortByAmount())
-//store.dispatch(sortByDate())
 
 store.dispatch(setStartDate(125))
 //store.dispatch(setStartDate())
 store.dispatch(setEndDate(1250))
+
+store.dispatch(sortByAmount())
+store.dispatch(sortByDate())
 
 /*
 // Demo State
