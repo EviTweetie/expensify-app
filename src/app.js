@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 import AppRouter from './routers/AppRouter'
 import configureStore from './store/configureStore'
 import { addExpense } from './actions/expenses'
@@ -23,8 +24,14 @@ store.dispatch(setTextFilter('wate'))
 
 const state = store.getState()
 const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
-console.log('VISIBLEEXPENSES', visibleExpenses)
 
-//console.log(store.getState())
+const jsx = (
+  <Provider store={store}>
+    <AppRouter />
+  </Provider>
+)
 
-ReactDOM.render(<AppRouter />, document.getElementById('app'))
+// console.log('STORE', store)
+// console.log('STATE', state)
+
+ReactDOM.render(jsx, document.getElementById('app'))
