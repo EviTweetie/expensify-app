@@ -22,6 +22,16 @@ store.dispatch(setStartDate(125))
 store.dispatch(setEndDate(1250))
 store.dispatch(setTextFilter('wate'))
 
+setTimeout(() => {
+  store.dispatch(setTextFilter('bil'))
+}, 3000)
+
+setTimeout(() => {
+  store.dispatch(
+    addExpense({ description: 'Restaurant Bill', amount: 1000, createdAt: 400 })
+  )
+}, 5000)
+
 const state = store.getState()
 const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
 
