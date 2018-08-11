@@ -8,10 +8,8 @@ const ExpenseList = props => (
   </div>
 )
 
-const ConnectedExpenseList = connect(state => {
+export default connect(state => {
   return {
     expenses: state.expenses
   }
 })(ExpenseList)
-
-export default ConnectedExpenseList
