@@ -30,7 +30,7 @@ setTimeout(() => {
 
 setTimeout(() => {
   store.dispatch(setTextFilter('ill'))
-}, 5000)
+}, 3000)
 
 const state = store.getState()
 const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
