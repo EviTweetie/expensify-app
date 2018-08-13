@@ -3,6 +3,7 @@ import React from 'react'
 export default class ExpenseForm extends React.Component {
   state = {
     description: '',
+    amount: '',
     note: ''
   }
   onDescriptionChange = e => {
@@ -12,6 +13,12 @@ export default class ExpenseForm extends React.Component {
   onNoteChange = e => {
     const note = e.target.value
     this.setState(() => ({ note }))
+  }
+  onAmountChange = e => {
+    const amount = e.target.value
+    if (amount.match(/^\d*(\.\d{0,2})?$/)) {
+      this.setState(() => ({ amount }))
+    }
   }
   render() {
     return (
@@ -26,7 +33,12 @@ export default class ExpenseForm extends React.Component {
             onChange={this.onDescriptionChange}
           />
 
-          <input type="number" placeholder="Amount" />
+          <input
+            type="text"
+            placeholder="Amount"
+            value={this.state.amount}
+            onChange={this.onAmountChange}
+          />
           <textarea
             name="Note"
             id="NOTE"
