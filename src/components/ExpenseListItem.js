@@ -1,10 +1,29 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { removeExpense } from '../actions/expenses'
+import { Link } from 'react-router-dom'
 
-const ExpenseListItem = ({ description, amount, createdAt, id, dispatch }) => (
+const ExpenseListItem = ({
+  description,
+  amount,
+  createdAt,
+  id,
+  dispatch,
+  history
+}) => (
   <div>
-    <h3>{description}</h3>
+    <button
+      onClick={e => {
+        e.preventDefault()
+        console.log({ id })
+        history.push(`/edit/:${id}`)
+      }}
+    >
+      {description}
+    </button>
+    <h3>
+      <Link to="/">{description}</Link>
+    </h3>
     <p>
       {amount} - {createdAt}{' '}
       <button
