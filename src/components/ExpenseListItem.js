@@ -12,18 +12,9 @@ const ExpenseListItem = ({
   history
 }) => (
   <div>
-    <button
-      onClick={e => {
-        e.preventDefault()
-        console.log({ id })
-        history.push(`/edit/:${id}`)
-      }}
-    >
-      {description}
-    </button>
-    <h3>
-      <Link to="/">{description}</Link>
-    </h3>
+    <Link to={`/edit/${id}`}>
+      <h3>{description}</h3>
+    </Link>
     <p>
       {amount} - {createdAt}{' '}
       <button
