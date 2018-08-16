@@ -1,20 +1,18 @@
-//file.test.js jest needs this naming convention
-//Test Example
-const add = (a, b) => {
-  return a + b
-  //check for errors
-  //return a + b + 1
-}
+const add = (a, b) => a + b
 
-//New Test Case
-// test('string arg1s',() => {
+const generateGreeting = (name = 'Anonymous') => `Hello ${name}!`
 
-// })
 test('should add two numbers', () => {
   const result = add(3, 4)
-  //Make Assertions
-  //   if (result !== 7) {
-  //     throw new Error(`You added 3 and 4. The result was ${result}. Expexted 7!`)
-  //   }
   expect(result).toBe(7)
+})
+
+test('Should return Greeting from name', () => {
+  const greeting = generateGreeting('Willy')
+  expect(greeting).toBe('Hello Willy!')
+})
+
+test('Should return Greeting from no name', () => {
+  const greeting = generateGreeting()
+  expect(greeting).toBe('Hello Anonymous!')
 })
